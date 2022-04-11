@@ -25,12 +25,17 @@ export class ReceiptRepository {
     });
   }
 
-  async findAll(receipt?: Receipt) {
+  async findAll({
+    description,
+    value,
+  }: {
+    description?: string;
+    value?: number;
+  }) {
     return this.prisma.receipts.findMany({
       where: {
-        description: receipt?.description,
-        value: receipt?.value,
-        date: receipt?.date,
+        description: { contains: description },
+        // value: { equals: Number(value) },
       },
     });
   }
@@ -40,6 +45,7 @@ export class ReceiptRepository {
       data: {
         description: receipt.description,
         value: receipt.value,
+        date: receipt.date,
       },
       where: {
         id: receipt.id,

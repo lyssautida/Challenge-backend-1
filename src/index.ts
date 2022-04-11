@@ -1,31 +1,30 @@
 import express from 'express';
-import { Expense } from './entities/Expenses';
-import { Receipt } from './entities/Receipts';
-import { ExpenseRepository } from './repositories/expenses-repository';
-import { ReceiptRepository } from './repositories/receipts-respository';
+import { ReceiptController } from './controllers/receipt-controller';
 
 const servidor = express();
 
-servidor.get('/', async (req, res) =>
-  res.send('Hello world <br><br> Server started'),
+servidor.use(express.json());
+
+servidor.get('/', async (req, res) => res.send
+
+const receiptController = new ReceiptController();
+
+servidor.post('/receipts', async (req, res) =>
+  receiptController.create(req, res),
 );
 
-const now = new Date();
+servidor.get('/receipts', (req, res) => receiptController.findAll(req, res));
 
-const receipts = new Receipt({
-  description: 'infra',
-  id: '1',
-  value: 1230,
-  date: now,
+servidor.get('/receipts/:id', async (req, res) => {
+  receiptController.findById(req, res);
 });
-console.log(receipts);
 
-const expenses = new Expense({
-  description: 'infra',
-  id: '1',
-  value: 1230,
-  date: now,
+servidor.put('/receipts/:id', async (req, res) =>
+  receiptController.update(req, res),
+);
+
+servidor.delete('/receipts/:id', async (req, res) => {
+  receiptController.deleteId(req, res);
 });
-console.log(expenses);
 
 servidor.listen(3333);
